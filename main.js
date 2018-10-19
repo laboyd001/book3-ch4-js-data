@@ -4410,15 +4410,34 @@ const githubData = [
 // 1. How many total commits were made in all of the events
 // loop thru outer array in each object find the commits array and find its length
 
+// this is the forEach way++++++++++++++++++++++++++++++++++++++++++++++
+
+// let totalCommits = 0
+
+
+// githubData.forEach((event) => {
+//   if (event.payload.hasOwnProperty("commits")){
+
+//     totalCommits += (event.payload.commits.length)
+
+//   }
+// })
+// console.log("Total commits = ", totalCommits)
+
+
+// this is the for loop way+++++++++++++++++++++++++++++++++++++++
 let totalCommits = 0
 
-githubData.forEach((event) => {
-  if (event.payload.hasOwnProperty("commits")){
-    totalCommits += (event.payload.commits.length)
-
+for (let i = 0; i < githubData.length; i++) {
+  const myArray = githubData[i]
+  if( myArray.payload.hasOwnProperty("commits")) {
+    totalCommits += myArray.payload.commits.length
   }
-})
-console.log("Total commits = ", totalCommits)
+}
+
+console.log("total commits = ", totalCommits)
+
+
 
 // 2. How many of each event type are there? (PullRequestEvent, PushEvent, etc)
 let allEvents = []
@@ -4433,18 +4452,50 @@ allEvents.forEach((i) =>{
   // below is counting the events
   eventCount[i] = (eventCount[i] || 0) + 1
 })
+
+
 console.log("Here are the individual event type counts: ", eventCount)
 console.table(eventCount)
 
 // 3. List all Github users who submitted a pull request that was approved by Steve.
 
-let approvedUsers = 0
+console.log("Here's a list of approved users that has Pull Requests:")
 
-githubData.forEach((user) => {
-  if (user.payload.hasOwnProperty("pull_request")) {
-    // approvedUsers += (user.payload.pull_request.owner)
+for (let i = 0; i < githubData.length; i++) {
+  const myArray = githubData[i]
+  if( myArray.type === "PullRequestEvent" && myArray.payload.pull_request.merged === true) {
+    console.log(myArray.payload.pull_request.user.login)
   }
+}
+
+// 4. List all repositories on which Steve had an event, and show how many events were on each one.
+
+// githubData.forEach((things) => {
+  
+// })
+
+let steveEvents = []
+// pushing each event type into an array
+githubData.forEach((event) => {
+  steveEvents.push(event.repo.id)
 })
 
-console.log(approvedUsers)
+let eventCount2 = {}
+// sets property on empty obj eventCount
+steveEvents.forEach((i) =>{
+  // below is counting the events
+  eventCount2[i] = (eventCount2[i] || 0) + 1
+})
+
+console.log("Here are the repo ids and values:")
+console.table(eventCount2)
+
+// 5. Which event had the most number of commits?
+
+
+
+
+
+
+
 
