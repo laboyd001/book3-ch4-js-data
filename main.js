@@ -4491,6 +4491,51 @@ console.log("Here are the repo ids and values:")
 console.table(eventCount2)
 
 // 5. Which event had the most number of commits?
+let eventId = ""
+let eventCommits = 0
+
+githubData.forEach((event, i) => {
+  const myArray = githubData[i]
+if (event.hasOwnProperty("payload") && 
+    event.payload.hasOwnProperty("commits")) {
+    if(myArray.payload.commits.length > eventCommits) { 
+     eventCommits = myArray.payload.commits.length
+      eventId = myArray.id
+    }
+  }
+  return eventId
+})
+
+console.log(`event Id: ${eventId}, commit count: ${eventCommits}`)
+
+// 6. Which programming langugages were affected by Steve's events?
+
+console.log("The following languages were affected: ")
+
+githubData.forEach((event) => {
+  if(event.payload.hasOwnProperty("pull_request")) {
+    console.log(event.payload.pull_request.head.repo.language)
+  }
+})
+
+// 7. What programming language was the most affected by Steve's events?
+
+
+let language = {}
+
+githubData.forEach((event) => {
+  if (event.payload.hasOwnProperty("pull_request") === true) {
+    let affectedLanguage = event.payload.pull_request.head.repo.language
+    language[affectedLanguage] = (language[affectedLanguage] || 0) + 1
+  }
+})
+
+console.log(language)
+console.log("Javascript was most affected")
+
+
+
+
 
 
 
